@@ -9,40 +9,44 @@ namespace Lab10._13
         static void Main(string[] args)
         {
             List<string> UserNames = new List<string>();
-            UserNames.Add("UserName1");
-            UserNames.Add("UserName2");
-            UserNames.Add("UserName3");
-            UserNames.Add("UserName4");
+            UserNames.Add("User1!abc");
             List<string> Passwords = new List<string>();
-            Passwords.Add("Pw1@12345");
-            Passwords.Add("Pw2!12345");
-            Passwords.Add("Pw3$12345");
-            Passwords.Add("Pw4%12345");
+            Passwords.Add("Pass1!abc");
+
+
+            bool keepGoing = true;
+            bool userCheck = false;
             
 
-
-
-            string userPass = GetInput("Please provide your preferred password:  ");
-            string userName = GetInput("Please provide your preferred username:  ");
-            //while
-
-
-            bool pwCheck = CheckPasswordRules(userPass);
-            bool userCheck = CheckUserNameRules(userName, UserNames) ;
-
-            if (pwCheck && userCheck)
+            while (keepGoing)
             {
-                Passwords.Add(userPass);
-                UserNames.Add(userName);
-            }
+                string userPass = GetInput("Please provide your preferred password:  ");
+                bool pwCheck = CheckPasswordRules(userPass);
 
-            foreach (string u in UserNames)
-            {
-                
-                foreach (string pw in Passwords)
+                if (pwCheck == true)
                 {
-                    Console.WriteLine(u);
-                    Console.Write("---" + pw);
+                    string userName = GetInput("Please provide your preferred username:  ");
+
+                    userCheck = CheckUserNameRules(userName, UserNames);
+
+                    if (pwCheck && userCheck)//verify that BOTH have to be true
+                    {
+                        Passwords.Add(userPass);
+                        UserNames.Add(userName);
+                        Console.WriteLine($"The username {userName} has been added to the user list.  Remember your password: {userPass}.\n");
+                    }
+                }
+
+                keepGoing = ContinueLoop("Would you like to add another password and user name? Y/N");
+            }
+            bool printLists = ContinueLoop("Would you like to print the current list of users? Y/N");
+            if (printLists == true)
+            {
+                Console.WriteLine("USERNAME----------PASSWORD");
+                for (int i = 0; i <= UserNames.Count() - 1; i++)
+                {
+                    Console.Write(UserNames[i] + "-----------");
+                    Console.WriteLine(Passwords[i]);
                 }
             }
         }
@@ -64,6 +68,23 @@ namespace Lab10._13
                 }
             }
             return false;
+        }
+        public static bool ContinueLoop(string input)
+        {
+            string answer = GetInput(input);
+            if (answer.ToLower() == "y")
+            {
+                return true;
+            }
+            else if (answer == "n" || answer == "N")
+            {
+                Console.WriteLine("OK.");
+                return false;
+            }
+            else
+            {
+                return ContinueLoop("I'm sorry, I didn't catch that.\nLet's try that again.");
+            }
         }
         public static bool NumeralValidation(string input)
         {
